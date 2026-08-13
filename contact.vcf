@@ -1,10 +1,10 @@
 BEGIN:VCARD
 VERSION:3.0
-N:Koch;Kevin;;;
-FN:Kevin Koch
-ORG:PPC
-TITLE:Mechanical Seal Sales Engineer
-TEL;TYPE=CELL:+1 000 000 0000
-EMAIL;TYPE=WORK:kkoch199@gmail.com
-ADR;TYPE=WORK:;;Gulf Coast, TX;;;;
+N:Koch;Keaton;;;
+FN:Keaton Koch
+ORG:PPC Mechanical Seals
+TITLE:Sales Engineer
+TEL;TYPE=CELL:(713) 397-4899
+EMAIL;TYPE=WORK:Kkoch@ppcmechanicalseals.com
+ADR;TYPE=WORK:;;Houston, TX;;;;
 END:VCARD
