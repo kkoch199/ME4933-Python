@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Digital Business Card</title>
+  <meta name="description" content="Professional contact card — tap to save." />
+
+  <!-- Open Graph / iMessage & LinkedIn preview -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="Contact Card" />
+  <meta property="og:description" content="Tap to save my contact info." />
+
+  <style>
+    /* ============================================================
+       THEME TOKENS
+       ============================================================ */
+    :root {
+      --bg: #eef1f5;
+      --bg-grad-1: #e7ebf1;
+      --bg-grad-2: #f4f6f9;
+      --card: #ffffff;
+      --card-border: rgba(20, 33, 61, 0.08);
+      --ink: #14213d;          /* steel navy */
+      --ink-soft: #46536b;
+      --ink-faint: #7c879b;
+      --accent: #c9702d;       /* copper */
+      --accent-ink: #ffffff;
+      --accent-soft: rgba(201, 112, 45, 0.10);
+      --line: rgba(20, 33, 61, 0.09);
+      --shadow: 0 18px 50px -20px rgba(20, 33, 61, 0.35);
+      --ring: rgba(201, 112, 45, 0.35);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1120;
+        --bg-grad-1: #0d1526;
+        --bg-grad-2: #0a0f1c;
+        --card: #131b2e;
+        --card-border: rgba(255, 255, 255, 0.06);
+        --ink: #eef2f9;
+        --ink-soft: #aab6cc;
+        --ink-faint: #6f7c94;
+        --accent: #e08b45;
+        --accent-ink: #1a1205;
+        --accent-soft: rgba(224, 139, 69, 0.14);
+        --line: rgba(255, 255, 255, 0.08);
+        --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.8);
+        --ring: rgba(224, 139, 69, 0.4);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, var(--bg-grad-1), transparent 60%),
+        linear-gradient(180deg, var(--bg-grad-2), var(--bg));
+      color: var(--ink);
+      min-height: 100dvh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: max(20px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 4px;
+      animation: rise 0.6s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    /* ---- Header band ---- */
+    .banner {
+      height: 96px;
+      background:
+        linear-gradient(135deg, var(--ink), #1f3a63 70%);
+      position: relative;
+    }
+    .banner::after {
+      /* subtle machined-line texture */
+      content: "";
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 14px);
+      opacity: .5;
+    }
+
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: -52px;
+      position: relative;
+      z-index: 2;
+    }
+    .avatar {
+      width: 104px; height: 104px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--card);
+      background: linear-gradient(135deg, #23375e, #34517f);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px; font-weight: 600; letter-spacing: 1px;
+      box-shadow: 0 8px 24px -10px rgba(20,33,61,.6);
+    }
+
+    .body { padding: 14px 26px 26px; text-align: center; }
+
+    .name { font-size: 25px; font-weight: 700; letter-spacing: -0.4px; }
+    .title { color: var(--accent); font-weight: 600; font-size: 15px; margin-top: 4px; }
+    .company { color: var(--ink-soft); font-size: 14.5px; margin-top: 2px; }
+    .location { color: var(--ink-faint); font-size: 13px; margin-top: 8px; display: inline-flex; gap: 5px; align-items: center; }
+
+    .tagline {
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      margin: 16px auto 0;
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+    /* ---- Primary CTA ---- */
+    .save-btn {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px 18px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      border: none; border-radius: 14px;
+      font-size: 16px; font-weight: 650;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .12s ease, filter .12s ease;
+      box-shadow: 0 12px 26px -12px var(--ring);
+    }
+    .save-btn:active { transform: scale(.98); filter: brightness(.96); }
+    .save-btn svg { width: 20px; height: 20px; }
+
+    /* ---- Contact rows ---- */
+    .rows { margin-top: 20px; border-top: 1px solid var(--line); }
+    .row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 4px;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      color: var(--ink);
+      text-align: left;
+      transition: background .12s ease;
+    }
+    .row:active { background: var(--accent-soft); }
+    .row .ic {
+      flex: 0 0 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 11px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .row .ic svg { width: 20px; height: 20px; }
+    .row .meta { min-width: 0; }
+    .row .k { font-size: 11.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--ink-faint); }
+    .row .v { font-size: 15px; font-weight: 550; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row .chev { margin-left: auto; color: var(--ink-faint); flex: 0 0 auto; }
+
+    /* ---- Social buttons ---- */
+    .socials { display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+    .social {
+      width: 46px; height: 46px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: transform .12s ease, color .12s ease, border-color .12s ease;
+    }
+    .social:active { transform: scale(.94); color: var(--accent); border-color: var(--ring); }
+    .social svg { width: 21px; height: 21px; }
+
+    .footer { margin-top: 22px; font-size: 11.5px; color: var(--ink-faint); }
+    .footer .dot { color: var(--accent); }
+
+    /* Elements toggled off when a config field is empty */
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="card" id="card">
+    <div class="banner"></div>
+
+    <div class="avatar-wrap">
+      <img class="avatar" id="avatar" alt="" hidden />
+      <div class="avatar" id="avatarInitials"></div>
+    </div>
+
+    <div class="body">
+      <h1 class="name" id="name"></h1>
+      <div class="title" id="title"></div>
+      <div class="company" id="company"></div>
+      <div class="location" id="locationWrap" hidden>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="location"></span>
+      </div>
+
+      <p class="tagline" id="tagline" hidden></p>
+
+      <a class="save-btn" id="saveBtn" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save to Contacts
+      </a>
+
+      <div class="rows" id="rows"></div>
+
+      <div class="socials" id="socials"></div>
+
+      <div class="footer">Tap. Save. Connect. <span class="dot">●</span></div>
+    </div>
+  </main>
+
+  <script>
+  /* ============================================================
+     ⬇⬇⬇  EDIT YOUR DETAILS HERE — THIS IS THE ONLY PLACE  ⬇⬇⬇
+     Leave a field as "" (empty) to hide it automatically.
+     ============================================================ */
+  const CONTACT = {
+    firstName: "Kevin",
+    lastName:  "Koch",
+    // Shown under the name:
+    title:     "Mechanical Seal Sales Engineer",
+    company:   "PPC",                       // spell out full company name if you like
+    location:  "Gulf Coast, TX",
+
+    // One line about what you do (optional — set to "" to hide):
+    tagline:   "Rotating-equipment reliability & mechanical sealing solutions for refining, petrochem & chemical processing.",
+
+    // Contact methods (any left "" are hidden):
+    phone:     "+1 000 000 0000",           // mobile — used for call + saved contact
+    workPhone: "",                          // optional office line
+    email:     "kkoch199@gmail.com",
+    website:   "",                          // e.g. "https://ppc-example.com"
+
+    // Social / professional links (any left "" are hidden):
+    linkedin:  "",                          // e.g. "https://www.linkedin.com/in/your-handle"
+    // Add whatever else applies:
+    // (leave blank to hide)
+
+    // Photo: put a headshot in this repo as "profile.jpg" and set to "profile.jpg".
+    // Leave "" to show your initials in a nice monogram instead.
+    photo:     ""
+  };
+  /* ============================================================
+     ⬆⬆⬆  STOP EDITING HERE  ⬆⬆⬆
+     ============================================================ */
+
+
+  /* ---------- Render ---------- */
+  const $ = (id) => document.getElementById(id);
+  const fullName = [CONTACT.firstName, CONTACT.lastName].filter(Boolean).join(" ");
+
+  document.title = fullName ? fullName + " — Contact" : "Digital Business Card";
+  $("name").textContent = fullName;
+  $("title").textContent = CONTACT.title || "";
+  $("company").textContent = CONTACT.company || "";
+  if (!CONTACT.title) $("title").hidden = true;
+  if (!CONTACT.company) $("company").hidden = true;
+
+  if (CONTACT.location) { $("location").textContent = CONTACT.location; $("locationWrap").hidden = false; }
+  if (CONTACT.tagline)  { $("tagline").textContent = CONTACT.tagline; $("tagline").hidden = false; }
+
+  // Avatar
+  if (CONTACT.photo) {
+    const img = $("avatar");
+    img.src = CONTACT.photo; img.alt = fullName; img.hidden = false;
+    $("avatarInitials").hidden = true;
+  } else {
+    const initials = (CONTACT.firstName[0] || "") + (CONTACT.lastName[0] || "");
+    $("avatarInitials").textContent = initials.toUpperCase();
+  }
+
+  // Contact rows
+  const icons = {
+    phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    email: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>',
+    web:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'
+  };
+  const chev = '<svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+
+  function row(href, icon, k, v) {
+    return `<a class="row" href="${href}"><span class="ic">${icon}</span><span class="meta"><span class="k">${k}</span><br><span class="v">${v}</span></span>${chev}</a>`;
+  }
+  const rowsHtml = [];
+  if (CONTACT.phone)     rowsHtml.push(row("tel:" + CONTACT.phone.replace(/[^+\d]/g, ""), icons.phone, "Mobile", CONTACT.phone));
+  if (CONTACT.workPhone) rowsHtml.push(row("tel:" + CONTACT.workPhone.replace(/[^+\d]/g, ""), icons.phone, "Office", CONTACT.workPhone));
+  if (CONTACT.email)     rowsHtml.push(row("mailto:" + CONTACT.email, icons.email, "Email", CONTACT.email));
+  if (CONTACT.website)   rowsHtml.push(row(CONTACT.website, icons.web, "Website", CONTACT.website.replace(/^https?:\/\//, "")));
+  $("rows").innerHTML = rowsHtml.join("");
+
+  // Socials
+  const socialIcons = {
+    linkedin: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>'
+  };
+  const socialHtml = [];
+  if (CONTACT.linkedin) socialHtml.push(`<a class="social" href="${CONTACT.linkedin}" aria-label="LinkedIn" target="_blank" rel="noopener">${socialIcons.linkedin}</a>`);
+  $("socials").innerHTML = socialHtml.join("");
+  if (!socialHtml.length) $("socials").hidden = true;
+
+
+  /* ---------- vCard (Save to Contacts) ---------- */
+  function buildVCard() {
+    const lines = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `N:${CONTACT.lastName};${CONTACT.firstName};;;`,
+      `FN:${fullName}`
+    ];
+    if (CONTACT.company)   lines.push(`ORG:${CONTACT.company}`);
+    if (CONTACT.title)     lines.push(`TITLE:${CONTACT.title}`);
+    if (CONTACT.phone)     lines.push(`TEL;TYPE=CELL:${CONTACT.phone}`);
+    if (CONTACT.workPhone) lines.push(`TEL;TYPE=WORK:${CONTACT.workPhone}`);
+    if (CONTACT.email)     lines.push(`EMAIL;TYPE=WORK:${CONTACT.email}`);
+    if (CONTACT.website)   lines.push(`URL:${CONTACT.website}`);
+    if (CONTACT.linkedin)  lines.push(`URL:${CONTACT.linkedin}`);
+    if (CONTACT.location)  lines.push(`ADR;TYPE=WORK:;;${CONTACT.location};;;;`);
+    lines.push("END:VCARD");
+    return lines.join("\r\n");
+  }
+
+  const saveBtn = $("saveBtn");
+  const blob = new Blob([buildVCard()], { type: "text/vcard;charset=utf-8" });
+  const blobUrl = URL.createObjectURL(blob);
+  const fileName = (fullName.replace(/\s+/g, "_") || "contact") + ".vcf";
+
+  saveBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    // A real .vcf named "contact.vcf" ships alongside this page as the most
+    // reliable path on iOS; fall back to the generated blob if it's missing.
+    const a = document.createElement("a");
+    a.href = "contact.vcf";
+    a.download = fileName;
+    // If contact.vcf isn't present, use the in-memory vCard instead.
+    fetch("contact.vcf", { method: "HEAD" })
+      .then(r => { a.href = r.ok ? "contact.vcf" : blobUrl; a.click(); })
+      .catch(() => { a.href = blobUrl; a.click(); });
+  });
+  </script>
+</body>
+</html>
