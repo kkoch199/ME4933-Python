@@ -281,7 +281,7 @@
 
     // Photo: put a headshot in this repo as "profile.jpg" and set to "profile.jpg".
     // Leave "" to show your initials in a nice monogram instead.
-    photo:     ""
+    photo:     "profile.jpg"
   };
   /* ============================================================
      ⬆⬆⬆  STOP EDITING HERE  ⬆⬆⬆
@@ -302,14 +302,15 @@
   if (CONTACT.location) { $("location").textContent = CONTACT.location; $("locationWrap").hidden = false; }
   if (CONTACT.tagline)  { $("tagline").textContent = CONTACT.tagline; $("tagline").hidden = false; }
 
-  // Avatar
+  // Avatar — show photo if it loads, otherwise fall back to the initials monogram
+  const initials = ((CONTACT.firstName[0] || "") + (CONTACT.lastName[0] || "")).toUpperCase();
+  $("avatarInitials").textContent = initials;
   if (CONTACT.photo) {
     const img = $("avatar");
-    img.src = CONTACT.photo; img.alt = fullName; img.hidden = false;
-    $("avatarInitials").hidden = true;
-  } else {
-    const initials = (CONTACT.firstName[0] || "") + (CONTACT.lastName[0] || "");
-    $("avatarInitials").textContent = initials.toUpperCase();
+    img.alt = fullName;
+    img.onload = () => { img.hidden = false; $("avatarInitials").hidden = true; };
+    img.onerror = () => { img.hidden = true; $("avatarInitials").hidden = false; };
+    img.src = CONTACT.photo;
   }
 
   // Contact rows
